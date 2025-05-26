@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz CE1D Sciences - Biologie</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .question-block {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-block:last-child {
+            border-bottom: none;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .options label:hover {
+            background-color: #e9e9e9;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #navigation-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #quiz-completed {
+            text-align: center;
+            font-size: 1.2em;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Révision CE1D Sciences 🧪🔬💡</h1>
+    <h2 id="quiz-title">Biologie : La nutrition et la reproduction dans le milieu dulcicole 🏞️🐟🌿</h2>
+
+    <div id="question-area">
+        <div class="question-block">
+            <p class="question-text" id="question-text"></p>
+            <div class="options" id="options-container">
+                </div>
+        </div>
+        <button id="check-answer-btn">Vérifier ma réponse</button>
+        <div class="feedback" id="feedback-area" style="display:none;">
+            <p id="feedback-text"></p>
+            <div class="explanation" id="explanation-text"></div>
+        </div>
+    </div>
+
+    <div id="navigation-buttons">
+        <button id="next-question-btn" style="display:none;">Question suivante</button>
+    </div>
+    <div id="quiz-completed" style="display:none;">
+        <p>Quiz terminé ! Excellent travail de révision.</p>
+        <button onclick="restartQuiz()">Recommencer ce quiz</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "Parmi les organismes suivants, lequel est un producteur dans un étang d'eau douce ?",
+            options: ["Un brochet", "Un escargot d'eau", "Une algue verte", "Un héron"],
+            answer: 2, // Index de la bonne réponse (0-indexed)
+            explanation: "Les <strong>producteurs</strong> sont des organismes capables de produire leur propre matière organique, généralement par photosynthèse, en utilisant l'énergie lumineuse. Dans un étang, les algues vertes (comme le phytoplancton) sont des producteurs primaires. Elles servent de base à la chaîne alimentaire.<br>* Le brochet est un consommateur (carnivore).<br>* L'escargot d'eau est un consommateur (herbivore ou détritivore).<br>* Le héron est un consommateur (carnivore)."
+        },
+        {
+            question: "Quel est le rôle principal des décomposeurs dans un écosystème aquatique ?",
+            options: ["Produire de l'oxygène", "Servir de nourriture aux poissons herbivores", "Transformer la matière organique morte en matière minérale", "Chasser les petits poissons"],
+            answer: 2,
+            explanation: "Les <strong>décomposeurs</strong>, tels que les bactéries et les champignons aquatiques, jouent un rôle crucial en décomposant les organismes morts (plantes, animaux) et les déchets organiques. Ce processus libère des nutriments minéraux (comme les nitrates et les phosphates) dans l'eau, qui peuvent ensuite être réutilisés par les producteurs (plantes et algues) pour leur croissance. Ils participent ainsi au recyclage de la matière."
+        },
+        {
+            question: "Laquelle de ces affirmations décrit le mieux la reproduction sexuée chez la plupart des poissons d'eau douce ?",
+            options: ["Les œufs sont pondus et fécondés à l'intérieur du corps de la femelle.", "Les œufs sont pondus dans l'eau et la fécondation est externe.", "Les poissons se reproduisent par bourgeonnement.", "Les poissons donnent naissance à des jeunes déjà formés (viviparité)."],
+            answer: 1,
+            explanation: "Chez la majorité des poissons d'eau douce, la reproduction est <strong>ovipare</strong> (ponte d'œufs) et la <strong>fécondation est externe</strong>. La femelle dépose ses œufs (ovules) dans l'eau, et le mâle libère ensuite son sperme (spermatozoïdes) à proximité pour les féconder. Il existe des exceptions, mais c'est le mode le plus courant.<br>* La fécondation interne est plus rare chez les poissons osseux d'eau douce.<br>* Le bourgeonnement est un mode de reproduction asexuée.<br>* La viviparité (donner naissance à des jeunes vivants) existe chez certains poissons (comme le guppy) mais n'est pas la généralité."
+        }
+        // Ajoute ici les 7 autres questions de biologie sur le même modèle
+    ];
+
+    let currentQuestionIndex = 0;
+
+    const questionTextElement = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackArea = document.getElementById('feedback-area');
+    const feedbackTextElement = document.getElementById('feedback-text');
+    const explanationTextElement = document.getElementById('explanation-text');
+    const checkAnswerBtn = document.getElementById('check-answer-btn');
+    const nextQuestionBtn = document.getElementById('next-question-btn');
+    const quizCompletedArea = document.getElementById('quiz-completed');
+    const questionArea = document.getElementById('question-area');
+
+
+    function loadQuestion() {
+        const currentQuestion = quizData[currentQuestionIndex];
+        questionTextElement.textContent = `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+        
+        optionsContainer.innerHTML = ''; // Vider les anciennes options
+        currentQuestion.options.forEach((option, index) => {
+            const label = document.createElement('label');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'answer';
+            radio.value = index;
+            radio.id = `option${index}`;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(option));
+            optionsContainer.appendChild(label);
+        });
+
+        feedbackArea.style.display = 'none';
+        checkAnswerBtn.style.display = 'inline-block';
+        nextQuestionBtn.style.display = 'none';
+    }
+
+    checkAnswerBtn.addEventListener('click', () => {
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+        if (!selectedOption) {
+            alert("Veuillez sélectionner une réponse.");
+            return;
+        }
+
+        const userAnswerIndex = parseInt(selectedOption.value);
+        const correctAnswerIndex = quizData[currentQuestionIndex].answer;
+
+        if (userAnswerIndex === correctAnswerIndex) {
+            feedbackTextElement.textContent = "Correct ! 👍";
+            feedbackArea.className = 'feedback correct';
+        } else {
+            feedbackTextElement.textContent = `Incorrect. 👎 La bonne réponse était : ${quizData[currentQuestionIndex].options[correctAnswerIndex]}`;
+            feedbackArea.className = 'feedback incorrect';
+        }
+        
+        explanationTextElement.innerHTML = quizData[currentQuestionIndex].explanation;
+        feedbackArea.style.display = 'block';
+        checkAnswerBtn.style.display = 'none';
+        
+        if (currentQuestionIndex < quizData.length - 1) {
+            nextQuestionBtn.style.display = 'inline-block';
+        } else {
+            quizCompletedArea.style.display = 'block';
+            questionArea.style.display = 'none'; // Cacher la zone de question
+            nextQuestionBtn.style.display = 'none';
+        }
+    });
+
+    nextQuestionBtn.addEventListener('click', () => {
+        currentQuestionIndex++;
+        loadQuestion();
+    });
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        quizCompletedArea.style.display = 'none';
+        questionArea.style.display = 'block';
+        loadQuestion();
+    }
+
+    // Charger la première question au démarrage
+    loadQuestion();
+
+</script>
+
+</body>
+</html>
